@@ -34,6 +34,7 @@ contract PreICO is Ownable, ReentrancyGuard {
   // start and end timestamps where investments are allowed (both inclusive)
   uint256 public startTime;
   uint256 public endTime;
+  uint256 day = 864000;
 
   // address where funds are collected
   address public wallet;
@@ -44,8 +45,8 @@ contract PreICO is Ownable, ReentrancyGuard {
   // amount of raised money in wei
   uint256 public centRaised;
 
-  uint256 softCap;
-  uint256 hardCap;
+  uint256 public softCap;
+  uint256 public hardCap;
 
   uint256 priceUSD; // wei in one USD
 
@@ -67,39 +68,36 @@ contract PreICO is Ownable, ReentrancyGuard {
 
   function PreICO(
   uint256 _startTime,
-  uint256 _endTime,
-  uint256 _rate,
+  uint256 _period,
   address _wallet,
   address _token,
-  uint256 _softCap,
-  uint256 _hardCap) public
+  uint256 _priceUSD) public
   {
-    require(_startTime >= now);
-    require(_endTime >= _startTime);
-    require(_rate > 0);
+    require(_period != 0);
+    require(_priceUSD != 0);
     require(_wallet != address(0));
     require(_token != address(0));
 
     startTime = _startTime;
-    endTime = _endTime;
-    rate = _rate;
+    endTime = startTime + _period * day;
+    priceUSD = _priceUSD;
+    rate = 12500000000000000; // 0.0125 * 1 ether
     wallet = _wallet;
     token = GDR(_token);
 
-    softCap = _softCap;
-    hardCap = _hardCap;
+    softCap = 30000000; // inCent
+    hardCap = 300000000; // inCent
   }
 
   // @return true if the transaction can buy tokens
-  modifier validPurchase() {
+  modifier saleIsOn() {
     bool withinPeriod = now >= startTime && now <= endTime;
-    bool nonZeroPurchase = msg.value != 0;
-    require(withinPeriod && nonZeroPurchase);
+    require(withinPeriod);
     _;
   }
 
   modifier isUnderHardCap() {
-    require(centRaised.add(msg.value) <= hardCap);
+    require(centRaised <= hardCap);
     _;
   }
 
@@ -159,7 +157,7 @@ contract PreICO is Ownable, ReentrancyGuard {
     msg.sender.transfer(valueToReturn);
   }
 
-  function manualTransfer(address _to, uint _valueUSD) validPurchase isUnderHardCap onlyOwnerOrManager {
+  function manualTransfer(address _to, uint _valueUSD) saleIsOn isUnderHardCap onlyOwnerOrManager {
     uint256 centValue = _valueUSD * 100;
     uint256 tokensAmount = getTokenAmount(centValue);
     centRaised = centRaised.add(centValue);
@@ -168,8 +166,8 @@ contract PreICO is Ownable, ReentrancyGuard {
   }
 
   // low level token purchase function
-  function buyTokens(address beneficiary) validPurchase isUnderHardCap nonReentrant public payable {
-    require(beneficiary != address(0));
+  function buyTokens(address beneficiary) saleIsOn isUnderHardCap nonReentrant public payable {
+    require(beneficiary != address(0) && msg.value != 0);
     uint256 weiAmount = msg.value;
     uint256 centValue = weiAmount.div(priceUSD);
     uint256 tokens = getTokenAmount(centValue);
