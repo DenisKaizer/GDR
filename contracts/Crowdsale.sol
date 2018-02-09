@@ -42,13 +42,15 @@ contract PreICO is Ownable, ReentrancyGuard {
   // how many token units a buyer gets per wei
   uint256 public rate; // tokens for one cent
 
+  uint256 public priceUSD; // wei in one USD
+
   // amount of raised money in wei
   uint256 public centRaised;
 
   uint256 public softCap;
   uint256 public hardCap;
 
-  uint256 priceUSD; // wei in one USD
+
 
   address oracle; //
   address manager;
