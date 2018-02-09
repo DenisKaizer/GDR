@@ -282,6 +282,6 @@ contract GDR is MintableToken {
 
   string public constant symbol = "GDRT";
 
-  uint32 public constant decimals = 8;
+  uint32 public constant decimals = 18;
 
 }
