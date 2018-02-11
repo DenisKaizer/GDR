@@ -125,14 +125,14 @@ contract PreICO is Ownable, ReentrancyGuard {
 
   // send ether to the fund collection wallet
   // override to create custom fund forwarding mechanisms
-  function forwardFunds() internal {
-    wallet.transfer(this.balance);
+  function forwardFunds(uint256 value) internal {
+    wallet.transfer(value);
   }
 
   function finishPreSale() onlyOwner {
     require(centRaised > softCap);
     token.transferOwnership(owner);
-    forwardFunds();
+    forwardFunds(this.balance);
   }
 
 
