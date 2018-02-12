@@ -34,7 +34,6 @@ contract PreICO is Ownable, ReentrancyGuard {
   // start and end timestamps where investments are allowed (both inclusive)
   uint256 public startTime;
   uint256 public endTime;
-  uint256 day = 864000;
 
   // address where funds are collected
   address public wallet;
@@ -81,7 +80,7 @@ contract PreICO is Ownable, ReentrancyGuard {
     require(_token != address(0));
 
     startTime = _startTime;
-    endTime = startTime + _period * day;
+    endTime = startTime + _period * 1 days;
     priceUSD = _priceUSD;
     rate = 12500000000000000; // 0.0125 * 1 ether
     wallet = _wallet;
