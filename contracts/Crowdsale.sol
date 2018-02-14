@@ -49,11 +49,10 @@ contract PreICO is Ownable, ReentrancyGuard {
   uint256 public softCap;
   uint256 public hardCap;
 
-
-
   address oracle; //
   address manager;
 
+  // investors => amount of money
   mapping(address => uint) public balances;
   mapping(address => uint) public balancesInCent;
 
@@ -134,21 +133,23 @@ contract PreICO is Ownable, ReentrancyGuard {
     forwardFunds(this.balance);
   }
 
-
+  // set the address from which you can change the rate
   function setOracle(address _oracle)  onlyOwner {
     oracle = _oracle;
   }
 
+  // set manager's address
   function setManager(address _manager)  onlyOwner {
     manager = _manager;
   }
 
+  //set new rate
   function changePriceUSD(uint256 _priceUSD)  onlyOracle {
     priceUSD = _priceUSD;
   }
 
   modifier refundAllowed()  {
-    require(centRaised < softCap && now < endTime);
+    require(centRaised < softCap && now > endTime);
     _;
   }
 
@@ -158,6 +159,7 @@ contract PreICO is Ownable, ReentrancyGuard {
     msg.sender.transfer(valueToReturn);
   }
 
+  // manual selling tokens for fiat
   function manualTransfer(address _to, uint _valueUSD) saleIsOn isUnderHardCap onlyOwnerOrManager {
     uint256 centValue = _valueUSD * 100;
     uint256 tokensAmount = getTokenAmount(centValue);
@@ -182,7 +184,6 @@ contract PreICO is Ownable, ReentrancyGuard {
   function () external payable {
     buyTokens(msg.sender);
   }
-
 }
 
 
