@@ -278,9 +278,9 @@ contract MintableToken is StandardToken, Ownable {
 
 contract GDR is MintableToken {
 
-  string public constant name = "Golden Resources Test";
+  string public constant name = "Golden Resource";
 
-  string public constant symbol = "GDRT";
+  string public constant symbol = "GDR";
 
   uint32 public constant decimals = 18;
 
