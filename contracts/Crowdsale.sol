@@ -173,7 +173,6 @@ contract PreICO is Ownable, ReentrancyGuard {
     require(beneficiary != address(0) && msg.value != 0);
     uint256 weiAmount = msg.value;
     uint256 centValue = weiAmount.div(priceUSD);
-    //require(centValue > n); need n as minimum value to invest
     uint256 tokens = getTokenAmount(centValue);
     centRaised = centRaised.add(centValue);
     token.mint(beneficiary, tokens);
