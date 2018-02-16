@@ -86,7 +86,7 @@ contract PreICO is Ownable, ReentrancyGuard {
     token = GDR(_token);
 
     softCap = 30000000; // inCent
-    hardCap = 300000000; // inCent
+    hardCap = 1000000000; // inCent
   }
 
   // @return true if the transaction can buy tokens
@@ -173,12 +173,15 @@ contract PreICO is Ownable, ReentrancyGuard {
     require(beneficiary != address(0) && msg.value != 0);
     uint256 weiAmount = msg.value;
     uint256 centValue = weiAmount.div(priceUSD);
+    //require(centValue > n);
     uint256 tokens = getTokenAmount(centValue);
     centRaised = centRaised.add(centValue);
     token.mint(beneficiary, tokens);
     balances[msg.sender] = balances[msg.sender].add(weiAmount);
     TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
-    //forwardFunds();
+    if (centRaised > softCap) {
+      forwardFunds(weiAmount);
+    }
   }
 
   function () external payable {
