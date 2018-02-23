@@ -46,7 +46,6 @@ contract PreICO is Ownable, ReentrancyGuard {
   // amount of raised money in wei
   uint256 public centRaised;
 
-  uint256 public softCap;
   uint256 public hardCap;
 
   address oracle; //
@@ -84,8 +83,6 @@ contract PreICO is Ownable, ReentrancyGuard {
     rate = 12500000000000000; // 0.0125 * 1 ether
     wallet = _wallet;
     token = GDR(_token);
-
-    softCap = 30000000; // inCent
     hardCap = 1000000000; // inCent
   }
 
@@ -127,40 +124,28 @@ contract PreICO is Ownable, ReentrancyGuard {
     wallet.transfer(value);
   }
 
-  function finishPreSale() onlyOwner {
-    require(centRaised > softCap);
+  function finishPreSale() public onlyOwner {
     token.transferOwnership(owner);
     forwardFunds(this.balance);
   }
 
   // set the address from which you can change the rate
-  function setOracle(address _oracle)  onlyOwner {
+  function setOracle(address _oracle) public  onlyOwner {
     oracle = _oracle;
   }
 
   // set manager's address
-  function setManager(address _manager)  onlyOwner {
+  function setManager(address _manager) public  onlyOwner {
     manager = _manager;
   }
 
   //set new rate
-  function changePriceUSD(uint256 _priceUSD)  onlyOracle {
+  function changePriceUSD(uint256 _priceUSD) public  onlyOracle {
     priceUSD = _priceUSD;
   }
 
-  modifier refundAllowed()  {
-    require(centRaised < softCap && now > endTime);
-    _;
-  }
-
-  function refund() refundAllowed nonReentrant {
-    uint valueToReturn = balances[msg.sender];
-    balances[msg.sender] = 0;
-    msg.sender.transfer(valueToReturn);
-  }
-
   // manual selling tokens for fiat
-  function manualTransfer(address _to, uint _valueUSD) saleIsOn isUnderHardCap onlyOwnerOrManager {
+  function manualTransfer(address _to, uint _valueUSD) public saleIsOn isUnderHardCap onlyOwnerOrManager {
     uint256 centValue = _valueUSD * 100;
     uint256 tokensAmount = getTokenAmount(centValue);
     centRaised = centRaised.add(centValue);
@@ -178,9 +163,7 @@ contract PreICO is Ownable, ReentrancyGuard {
     token.mint(beneficiary, tokens);
     balances[msg.sender] = balances[msg.sender].add(weiAmount);
     TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
-    if (centRaised > softCap) {
-      forwardFunds(weiAmount);
-    }
+    forwardFunds(weiAmount);
   }
 
   function () external payable {
