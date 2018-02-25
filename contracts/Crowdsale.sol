@@ -43,7 +43,6 @@ contract PreICO is Ownable, ReentrancyGuard {
 
   uint256 public priceUSD; // wei in one USD
 
-  // amount of raised money in wei
   uint256 public centRaised;
 
   uint256 public hardCap;
@@ -131,16 +130,18 @@ contract PreICO is Ownable, ReentrancyGuard {
 
   // set the address from which you can change the rate
   function setOracle(address _oracle) public  onlyOwner {
+    require(_oracle != address(0));
     oracle = _oracle;
   }
 
   // set manager's address
   function setManager(address _manager) public  onlyOwner {
+    require(_manager != address(0));
     manager = _manager;
   }
 
-  //set new rate
   function changePriceUSD(uint256 _priceUSD) public  onlyOracle {
+    require(_priceUSD != 0);
     priceUSD = _priceUSD;
   }
 
