@@ -3,7 +3,7 @@
 </p>
 
 
-# Hyperion Fund Smart Contracts
+# Golden Resources Smart Contracts
 
 # Project descruption 
 Golden Resources - Decentralized online platform of mining gold on Ethereum blockchain
