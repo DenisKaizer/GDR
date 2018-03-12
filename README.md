@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="240" height ="120"  alt="GDR" src = "./assets/GDR.png">
+  <img width="720" height ="120"  alt="GDR" src = "./assets/GDR.png">
 </p>
 
 
