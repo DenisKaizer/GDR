@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="240" height ="240"  alt="GDR" src = "./assets/GDR.jpg">
+  <img width="240" height ="120"  alt="GDR" src = "./assets/GDR.jpg">
 </p>
 
 
@@ -16,7 +16,7 @@ Golden Resources - Decentralized online platform of mining gold on Ethereum bloc
 # Smart contracts
 
 ## [GDRToken](https://github.com/DenisKaizer/GDR/blob/master/contracts/GDR.sol)
-ERC20 mintable token with additional overridings to create a  possibility to issue a dividends in form of a HyperionWattCoin
+ERC20 mintable token with additional overridings to create a  possibility to issue a dividends in form of a GDR Token
 
 Token | Parameters
 ------------ | -------------
